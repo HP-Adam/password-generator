@@ -1,6 +1,5 @@
-// Assignment code here
-// 8-128 characters in length; lowercase, uppercase, numeric, speacial character prompt options to include at least 1 of each prompted character
-let speacialChar = [
+//characters to make up password
+const speacialChar = [
   "!",
   "'",
   '"',
@@ -34,7 +33,7 @@ let speacialChar = [
   "|",
   "\\",
 ];
-let lowercaseChar = [
+const lowercaseChar = [
   "a",
   "b",
   "c",
@@ -62,7 +61,7 @@ let lowercaseChar = [
   "y",
   "z",
 ];
-let uppercaseChar = [
+const uppercaseChar = [
   "A",
   "B",
   "C",
@@ -90,8 +89,9 @@ let uppercaseChar = [
   "Y",
   "Z",
 ];
+const numChar = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
-let password = [];
+let passwordArr = [];
 
 const generatePassword = () => {
   //choose length of password
@@ -113,9 +113,62 @@ const generatePassword = () => {
   let lowerPrompt = window.confirm("Do you require lowercase characters?");
   let upperPrompt = window.confirm("Do you require uppercase characters?");
   let numPrompt = window.confirm("Do you require numbers in the password?");
+  let chosenArr = [];
+  if (speacialPrompt) {
+    chosenArr = chosenArr.concat(speacialChar);
+  }
+  if (lowerPrompt) {
+    chosenArr = chosenArr.concat(lowercaseChar);
+  }
+  if (upperPrompt) {
+    chosenArr = chosenArr.concat(uppercaseChar);
+  }
+  if (numPrompt) {
+    chosenArr = chosenArr.concat(numChar);
+  }
+  if (!speacialPrompt && !lowerPrompt && !upperPrompt && !numPrompt) {
+    window.alert(
+      "At least one character type must be used. Password will default to all lowercase characters."
+    );
+    chosenArr = chosenArr.concat(lowercaseChar);
+  }
 
   //make'a de passwerd
-  for (let i = 0; i < parseInt(passLength); i++) {}
+  for (let i = 0; i < parseInt(passLength); i++) {
+    passwordArr.push(chosenArr[Math.floor(Math.random() * chosenArr.length)]);
+  }
+  let finalPass = passwordArr.join("");
+
+  //check password has all required characters
+  if (
+    speacialPrompt &&
+    !speacialChar.some((char) => finalPass.includes(char))
+  ) {
+    finalPass = finalPass.replace(
+      finalPass.charAt(Math.floor(Math.random() * finalPass.length)),
+      speacialChar[Math.floor(Math.random() * speacialChar.length)]
+    );
+  }
+  if (lowerPrompt && !lowercaseChar.some((char) => finalPass.includes(char))) {
+    finalPass = finalPass.replace(
+      finalPass.charAt(Math.floor(Math.random() * finalPass.length)),
+      lowercaseChar[Math.floor(Math.random() * speacialChar.length)]
+    );
+  }
+  if (upperPrompt && !uppercaseChar.some((char) => finalPass.includes(char))) {
+    finalPass = finalPass.replace(
+      finalPass.charAt(Math.floor(Math.random() * finalPass.length)),
+      uppercaseChar[Math.floor(Math.random() * uppercaseChar.length)]
+    );
+  }
+  if (numPrompt && !numChar.some((char) => finalPass.includes(char))) {
+    finalPass = finalPass.replace(
+      finalPass.charAt(Math.floor(Math.random() * finalPass.length)),
+      numChar[Math.floor(Math.random() * numChar.length)]
+    );
+  }
+
+  return finalPass;
 };
 
 // Get references to the #generate element
@@ -123,6 +176,7 @@ var generateBtn = document.querySelector("#generate");
 
 // Write password to the #password input
 function writePassword() {
+  passwordArr = [];
   var password = generatePassword();
   var passwordText = document.querySelector("#password");
 
